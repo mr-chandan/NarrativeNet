@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://muddy-windbreaker-fox.cyclic.app/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }

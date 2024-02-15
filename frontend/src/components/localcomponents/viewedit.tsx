@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from "react"; // Import useState hook
+import { useEffect, useState } from "react";
 import { Storytyper } from "../ui/Storytyper";
 import Textmarker from "./Textmarker";
 import styles from "./viewedit.module.css";
