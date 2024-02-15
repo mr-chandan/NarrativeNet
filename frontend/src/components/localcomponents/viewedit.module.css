@@ -1,0 +1,93 @@
+.container {
+  max-width: 1450px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 0.9rem;
+}
+
+.create {
+  margin: 1.5rem 0 1.5rem 1.5rem;
+}
+
+.name {
+  font-size: 2.5rem;
+  font-family: "Protest Revolution", sans-serif;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  gap: 1rem;
+}
+
+.grid1 {
+  border-width: 1px;
+  border-radius: 0.5rem;
+  background: #ffff;
+}
+
+.bordname {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.sname {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.aname {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.inpbar {
+  padding: 1rem;
+}
+
+.grid2 {
+  border-width: 1px;
+  border-radius: 0.5rem;
+  background: #ffff;
+}
+
+.main {
+  padding: 1rem;
+}
+
+.switch {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contibutename {
+  padding: 1rem;
+}
+
+.cname {
+  font-size: 2.5rem;
+  font-family: "Protest Revolution", sans-serif;
+  font-weight: 700;
+}
+
+.ctext {
+  padding: 1rem;
+}
+
+.votediv {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.vote {
+  display: flex;
+  align-items: center;
+  gap: .1rem;
+  text-align: center;
+}

@@ -1,0 +1,27 @@
+.pink {
+    background: url(https://s2.svgbox.net/pen-brushes.svg?ic=brush-8&color=F7B8C1);
+    margin: -2px -6px;
+    padding:  2px  6px;
+}
+
+.green {
+    background: url(https://s2.svgbox.net/pen-brushes.svg?ic=brush-6&color=8cff32);
+    margin: -2px -6px;
+    padding:  2px  6px;
+}
+
+.blue {
+    background: url(https://s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=67dfff);
+    margin: -2px -6px;
+    padding:  2px  6px;
+}
+.orange {
+    background: url(https://s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=F4A672);
+    margin: -2px -6px;
+    padding:  2px  6px;
+}
+.yellow {
+    background: url(https://s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=fdff00);
+    margin: -2px -6px;
+    padding:  2px  6px;
+}

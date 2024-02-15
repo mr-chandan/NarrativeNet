@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+.container {
+  max-width: 1450px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 0.9rem;
+}
+
+.create {
+  margin-top: 2rem;
+}
+
+.name {
+  font-size: 2.5rem;
+  font-family: "Protest Revolution", sans-serif;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  font-family: "Inter", sans-serif;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.card {
+  border-width: 1px;
+  border-radius: 8px;
+  display: flex;
+  /* align-items: center; */
+  flex-direction: column;
+  padding: 1rem;
+  gap: .5rem;
+}
+
+
+.cardname{
+  /* font-family: "Protest Revolution", sans-serif; */
+  /* font-family: "Protest Revolution", sans-serif; */
+  /* font-weight: 600; */
+  /* color: black; */
+}
+.storyname{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bio{
+  font-size: .8rem;
+}
+
+.logindiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
