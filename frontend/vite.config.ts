@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: process.env.NODE_ENV === "production"
-          ? "https://your-production-url"
+          ? "https://muddy-windbreaker-fox.cyclic.app"
           : "http://localhost:3000",
         secure: false,
         changeOrigin: true,
