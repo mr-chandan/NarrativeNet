@@ -1,8 +1,8 @@
 {
     "rewrites": [
       {
-        "source": "/api",
-        "destination": "https://muddy-windbreaker-fox.cyclic.app"
+        "source": "/api/:path*",
+        "destination": "https://muddy-windbreaker-fox.cyclic.app/:path*"
       }
     ]
   }
