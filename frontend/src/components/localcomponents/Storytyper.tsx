@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth0 } from "@auth0/auth0-react";
-import { toast } from "./use-toast";
+import { toast } from "../ui/use-toast";
 
 const FormSchema = z.object({
   bio: z
@@ -29,7 +29,7 @@ const FormSchema = z.object({
     }),
 });
 
-export function Storytyper() {
+export function Storytyper({ tone }: { tone: string | undefined }) {
   const { getAccessTokenSilently, user } = useAuth0();
   const { storyid } = useParams();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -77,17 +77,17 @@ export function Storytyper() {
           name="bio"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bio</FormLabel>
+              <FormLabel>
+                Continue the story With the user specified tone
+              </FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Tell us a little bit about yourself"
+                  placeholder="Create your magic"
                   className="resize-none"
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                You can <span>@mention</span> other users and organizations.
-              </FormDescription>
+              <FormDescription>Tone specfied is {tone}</FormDescription>
               <FormMessage />
             </FormItem>
           )}

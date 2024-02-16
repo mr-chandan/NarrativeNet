@@ -6,14 +6,21 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start" : "node index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.9.1",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-oauth2-jwt-bearer": "^1.6.0",
     "postgres": "^3.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "prisma": "^5.9.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

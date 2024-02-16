@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   BigInt                 @id @default(sequence())
+  user_id              String                 @unique
+  username             String
+  email                String                 @unique
+  created_at           DateTime               @default(now())
+  Story                Story[]
+  StoryContribution    StoryContribution[]
+  UserContributionVote UserContributionVote[]
+}
+
+model Story {
+  id                BigInt              @id @default(sequence())
+  title             String              @db.String(200)
+  author            User                @relation(fields: [author_id], references: [user_id])
+  author_id         String
+  author_name       String
+  starting_line     String
+  type_of_tone      String              @db.String(200)
+  published_date    DateTime            @default(now())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  StoryContribution StoryContribution[]
+}
+
+model StoryContribution {
+  contributionid         BigInt                 @id @default(sequence())
+  story_id               BigInt
+  contributing_user_id   String
+  contributing_user_name String
+  content                String
+  contributiondate       DateTime               @default(now())
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  upvotes                Int                    @default(0)
+  downvotes              Int                    @default(0)
+  Story                  Story                  @relation(fields: [story_id], references: [id])
+  User                   User                   @relation(fields: [contributing_user_id], references: [user_id])
+  UserContributionVote   UserContributionVote[]
+}
+
+model UserContributionVote {
+  vote_id               BigInt            @id @default(sequence())
+  contribution_story_id BigInt
+  user_id               String
+  vote_type             Boolean
+  created_at            DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  StoryContribution     StoryContribution @relation(fields: [contribution_story_id], references: [contributionid])
+  User                  User              @relation(fields: [user_id], references: [user_id])
+}

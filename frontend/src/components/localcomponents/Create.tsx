@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 interface Story {
-  story_id: number;
+  id: number;
   title: string;
   author: string;
   type_of_tone: string;
@@ -84,6 +84,7 @@ const Create: React.FC = () => {
               .then((response) => response.json())
               .then((dataofuser) => {
                 setuserstory(dataofuser);
+                console.log(dataofuser);
               });
           });
       }
@@ -99,18 +100,28 @@ const Create: React.FC = () => {
       </div>
       <div className={styles.grid}>
         {trendingstory.map((story, index) => (
-          <div className={styles.card} key={index}>
-            <div className={styles.storyname}>
-              <div className={styles.cardname}>{story.title}</div>
-              <div>
-                {formatDistanceToNow(new Date(story.published_date), {
-                  addSuffix: true,
-                })}
+          <Link to={`/viewer/${story.id}`} key={index}>
+            <div className={styles.card} key={index}>
+              <div className={styles.storyname}>
+                <div className={styles.cardname}>
+                  {story.title.length > 15
+                    ? `${story.title.substring(0, 12)}...`
+                    : story.title}
+                </div>
+                <div>
+                  {formatDistanceToNow(new Date(story.published_date), {
+                    addSuffix: true,
+                  })}
+                </div>
+              </div>
+              <div className={styles.author}>{story.author_name}</div>
+              <div className={styles.bio}>
+                {story.starting_line.length > 70
+                  ? `${story.starting_line.substring(0, 70)}...`
+                  : story.starting_line}
               </div>
             </div>
-            <div className={styles.author}>{story.author_name}</div>
-            <div className={styles.bio}>{story.starting_line}</div>
-          </div>
+          </Link>
         ))}
       </div>
       <div className={styles.create}>
@@ -125,7 +136,32 @@ const Create: React.FC = () => {
             {isAuthenticated ? (
               <div className={styles.grid}>
                 {userstory.map((story, index) => (
-                  <Link to={`/viewer/${story.story_id}`} key={index}>
+                  <Link to={`/viewer/${story.id}`} key={index}>
+                    <div className={styles.card} key={index}>
+                      <div className={styles.storyname}>
+                        <div className={styles.cardname}>
+                          {story.title.length > 15
+                            ? `${story.title.substring(0, 12)}...`
+                            : story.title}
+                        </div>
+                        <div>
+                          {formatDistanceToNow(new Date(story.published_date), {
+                            addSuffix: true,
+                          })}
+                        </div>
+                      </div>
+                      <div className={styles.author}>{story.author_name}</div>
+                      <div className={styles.bio}>
+                        {story.starting_line.length > 70
+                          ? `${story.starting_line.substring(0, 70)}...`
+                          : story.starting_line}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+
+                {/* {userstory.map((story, index) => (
+                 
                     <div className={styles.card}>
                       <div className={styles.storyname}>
                         <div className={styles.cardname}>{story.title}</div>
@@ -138,8 +174,8 @@ const Create: React.FC = () => {
                       <div className={styles.author}>{story.author_name}</div>
                       <div className={styles.bio}>{story.starting_line}</div>
                     </div>
-                  </Link>
-                ))}
+ 
+                ))} */}
               </div>
             ) : (
               <Button onClick={() => loginWithRedirect()}>Log In</Button>

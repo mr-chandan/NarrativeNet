@@ -50,10 +50,32 @@
 
 .bio{
   font-size: .8rem;
+  display: flex;
+  word-break: break-all;
 }
 
 .logindiv{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media only screen and (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .name {
+    font-size: 2rem;
+  }
+  
+}
+
+
+@media only screen and (max-width: 650px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .name {
+    font-size: 1.5rem;
+  }
 }

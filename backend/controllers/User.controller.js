@@ -1,21 +1,39 @@
-import sql from "../Database/Postgres.js";
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+BigInt.prototype.toJSON = function () {
+    const int = Number.parseInt(this.toString());
+    return int ?? this.toString();
+};
 
 class UserController {
 
     async setUserData(req, res) {
+        console.log("dsa")
         const { name, email, sub } = req.body;
 
+        console.log(req.body)
         try {
             if (sub) {
-                const exists = await sql`
-                    select exists (
-                        select 1 from users where "user_id" = ${sub} or email = ${email}
-                    )
-                `;
-                if (!exists[0].exists) {
-                    await sql`
-                        insert into users (username, email, user_id) values (${name}, ${email}, ${sub})
-                    `;
+
+                const exists = await prisma.user.findFirst({
+                    where: {
+                        OR: [
+                            { user_id: sub },
+                            { email: email }
+                        ]
+                    }
+                });
+                console.log(exists)
+                if (!exists) {
+                    await prisma.user.create({
+                        data: {
+                            username: name,
+                            email: email,
+                            user_id: sub
+                        }
+                    });
                     res.status(200).json({ message: "User added successfully" });
                 } else {
                     res.status(200).json({ message: "User already exists" });

@@ -1,14 +1,21 @@
 import sql from "../Database/Postgres.js";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 class StoryController {
     async createStory(req, res) {
-        const currentDate = new Date();
         const { user, values } = req.body;
-        console.log(user);
         try {
-            const newStory = await sql`
-            INSERT INTO stories (title, author_name,author_id, starting_line, type_of_tone, published_date)
-                VALUES (${values.title}, ${user.name}, ${user.sub}, ${values.Startingline}, ${values.Type_of_tone}, ${currentDate})RETURNING *;`;
+            const newStory = await prisma.story.create({
+                data: {
+                    title: values.title,
+                    author_name: user.name,
+                    author_id: user.sub,
+                    starting_line: values.Startingline,
+                    type_of_tone: values.Type_of_tone,
+                }
+            });
             res.status(201).json(newStory);
         } catch (error) {
             console.error("Error inserting new story:", error);
@@ -18,11 +25,9 @@ class StoryController {
 
     async fetchRandom5stories(req, res) {
         try {
-            const stories = await sql`
-            SELECT * FROM stories
-            ORDER BY RANDOM()
-            LIMIT 6;
-        `;
+            const allStories = await prisma.story.findMany();
+            const shuffledStories = allStories.sort(() => 0.5 - Math.random());
+            const stories = shuffledStories.slice(0, 5);
             res.status(200).json(stories);
         } catch (error) {
             console.error("Error fetching random stories:", error);
@@ -30,16 +35,15 @@ class StoryController {
         }
     }
 
-
     async fetchStoriesByAuthorId(req, res) {
         const { authorId } = req.body;
-        console.log(req.body)
 
         try {
-            const stories = await sql`
-                SELECT * FROM stories
-                WHERE author_id = ${authorId};
-            `;
+            const stories = await prisma.story.findMany({
+                where: {
+                    author_id: authorId
+                }
+            });
             res.status(200).json(stories);
         } catch (error) {
             console.error("Error fetching stories by author ID:", error);
@@ -49,31 +53,20 @@ class StoryController {
 
     async fetchStoryById(req, res) {
         const { storyid } = req.body;
-
+        console.log(storyid)
         try {
-            // Fetch story from the stories table
-            const [story] = await sql`
-                SELECT * FROM stories
-                WHERE story_id = ${storyid};
-            `;
+            const story = await prisma.story.findUnique({
+                where: {
+                    id: storyid
+                },
+                include: { StoryContribution: true },
+            });
 
             if (!story) {
                 return res.status(404).json({ message: "Story not found" });
             }
 
-            // Fetch contributions from the Contribution Table based on the story ID
-            const contributions = await sql`
-                SELECT * FROM StoryContributionTable
-                WHERE story_id = ${storyid};
-            `;
-
-            // Combine the story and contributions into a single response object
-            const storyWithContributions = {
-                story,
-                contributions,
-            };
-
-            res.status(200).json(storyWithContributions);
+            res.status(200).json(story);
         } catch (error) {
             console.error("Error fetching story by ID:", error);
             res.status(500).json({ error: "Internal Server Error" });
@@ -82,16 +75,16 @@ class StoryController {
 
 
     async addContribution(req, res) {
-        console.log(req.body);
-
         const { user, data, storyid } = req.body;
 
         try {
             // Check if contribution already exists
-            const existingContribution = await sql`
-                SELECT * FROM StoryContributionTable
-                WHERE story_id = ${storyid} AND contributing_user_id = ${user.sub};
-            `;
+            const existingContribution = await prisma.StoryContribution.count({
+                where: {
+                    story_id: storyid,
+                    contributing_user_id: user.sub
+                }
+            })
 
             if (existingContribution.count > 0) {
                 res.status(400).json({ message: "Contribution already exists for this user and story." });
@@ -99,12 +92,15 @@ class StoryController {
             }
 
             // Contribution does not exist, proceed with adding it
-            const contributionDate = new Date();
-            const newContribution = await sql`
-                INSERT INTO StoryContributionTable (story_id, contributing_user_id, contributing_user_name, Content, ContributionDate)
-                VALUES (${storyid}, ${user.sub}, ${user.name}, ${data.bio}, ${contributionDate})
-                RETURNING *;
-            `;
+            const newContribution = await prisma.storyContribution.create({
+                data: {
+                    story_id: storyid,
+                    contributing_user_id: user.sub,
+                    contributing_user_name: user.name,
+                    content: data.bio
+                }
+            })
+
             res.status(201).json(newContribution);
         } catch (error) {
             console.error("Error adding contribution:", error);
@@ -115,41 +111,45 @@ class StoryController {
     async castVote(req, res) {
         const { user, vote, selectedContribution } = req.body;
 
+        console.log(req.body)
+
         console.log(vote);
         try {
             // Convert vote to boolean
             const voteValue = vote === 1 ? true : false;
 
             // Check if the user has already voted for this contribution
-            const existingVote = await sql`
-                SELECT *
-                FROM UserContributionVoteTable
-                WHERE contribution_story_id = ${selectedContribution.contributionid} AND user_id = ${selectedContribution.contributing_user_id}
-            `;
+            const existingVote = await prisma.userContributionVote.findFirst({
+                where: {
+                    contribution_story_id: selectedContribution.contributionid,
+                    user_id: selectedContribution.contributing_user_id
+                }
+            });
 
-            if (existingVote && existingVote.length > 0) {
+            if (existingVote) {
                 return res.status(500).json({ message: "User has already voted for this contribution." });
             }
 
             // Insert the new vote into the UserContributionVoteTable
-            await sql`
-                INSERT INTO UserContributionVoteTable (contribution_story_id, user_id, vote_type)
-                VALUES (${selectedContribution.contributionid}, ${selectedContribution.contributing_user_id}, ${voteValue})
-            `;
+            await prisma.userContributionVote.create({
+                data: {
+                    contribution_story_id: selectedContribution.contributionid,
+                    user_id: selectedContribution.contributing_user_id,
+                    vote_type: voteValue
+                }
+            });
 
             // Update upvote and downvote columns in StoryContributionTable
             if (voteValue) {
-                await sql`
-                    UPDATE StoryContributionTable
-                    SET upvotes = upvotes + 1
-                    WHERE contributionid = ${selectedContribution.contributionid};
-                `;
+                await prisma.storyContribution.update({
+                    where: { contributionid: selectedContribution.contributionid },
+                    data: { upvotes: { increment: 1 } }
+                });
             } else {
-                await sql`
-                    UPDATE StoryContributionTable
-                    SET downvotes = downvotes + 1
-                    WHERE contributionid = ${selectedContribution.contributionid};
-                `;
+                await prisma.storyContribution.update({
+                    where: { contributionid: selectedContribution.contributionid },
+                    data: { downvotes: { increment: 1 } }
+                });
             }
 
             console.log('Vote recorded successfully.');
@@ -166,21 +166,23 @@ class StoryController {
     async countVotesByContributionId(req, res) {
         const { contributionId } = req.body;
         try {
-            const trueVotes = await sql`
-                SELECT COUNT(*) AS true_votes
-                FROM UserContributionVoteTable
-                WHERE contribution_story_id = ${contributionId} AND vote_type = true
-            `;
+            const trueVotes = await prisma.userContributionVote.count({
+                where: {
+                    contribution_story_id: contributionId,
+                    vote_type: true
+                }
+            });
 
-            const falseVotes = await sql`
-                SELECT COUNT(*) AS false_votes
-                FROM UserContributionVoteTable
-                WHERE contribution_story_id = ${contributionId} AND vote_type = false
-            `;
+            const falseVotes = await prisma.userContributionVote.count({
+                where: {
+                    contribution_story_id: contributionId,
+                    vote_type: false
+                }
+            });
 
             const result = {
-                trueVotes: trueVotes[0].true_votes || 0,
-                falseVotes: falseVotes[0].false_votes || 0
+                trueVotes: trueVotes,
+                falseVotes: falseVotes
             };
 
             res.status(200).json(result); // Send the result as JSON response
