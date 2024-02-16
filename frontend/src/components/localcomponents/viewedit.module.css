@@ -59,6 +59,7 @@
   padding: 1rem;
   display: flex;
   flex-wrap: wrap;
+  word-break: break-all;
 }
 
 .switch {
