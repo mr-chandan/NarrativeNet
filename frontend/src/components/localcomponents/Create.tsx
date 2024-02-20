@@ -133,34 +133,39 @@ const Create: React.FC = () => {
       {!isLoading && (
         <div>
           {isAuthenticated ? (
-            <div className={styles.grid}>
+            <div>
               {userstory.length === 0 ? (
-                <div className={styles.logindiv}>Create your first story!</div>
+                <div className={styles.logindivv}>Create your first story!</div>
               ) : (
-                userstory.map((story, index) => (
-                  <Link to={`/viewer/${story.id}`} key={index}>
-                    <div className={styles.card}>
-                      <div className={styles.storyname}>
-                        <div className={styles.cardname}>
-                          {story.title.length > 15
-                            ? `${story.title.substring(0, 12)}...`
-                            : story.title}
+                <div className={styles.grid}>
+                  {userstory.map((story, index) => (
+                    <Link to={`/viewer/${story.id}`} key={index}>
+                      <div className={styles.card} key={index}>
+                        <div className={styles.storyname}>
+                          <div className={styles.cardname}>
+                            {story.title.length > 15
+                              ? `${story.title.substring(0, 12)}...`
+                              : story.title}
+                          </div>
+                          <div>
+                            {formatDistanceToNow(
+                              new Date(story.published_date),
+                              {
+                                addSuffix: true,
+                              }
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          {formatDistanceToNow(new Date(story.published_date), {
-                            addSuffix: true,
-                          })}
+                        <div className={styles.author}>{story.author_name}</div>
+                        <div className={styles.bio}>
+                          {story.starting_line.length > 70
+                            ? `${story.starting_line.substring(0, 70)}...`
+                            : story.starting_line}
                         </div>
                       </div>
-                      <div className={styles.author}>{story.author_name}</div>
-                      <div className={styles.bio}>
-                        {story.starting_line.length > 70
-                          ? `${story.starting_line.substring(0, 70)}...`
-                          : story.starting_line}
-                      </div>
-                    </div>
-                  </Link>
-                ))
+                    </Link>
+                  ))}
+                </div>
               )}
             </div>
           ) : (

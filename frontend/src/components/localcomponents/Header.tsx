@@ -199,7 +199,6 @@ const Header = () => {
                   : "https://ui.shadcn.com/avatars/04.png"
               }
               alt="profile"
-
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>

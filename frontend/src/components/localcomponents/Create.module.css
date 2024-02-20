@@ -60,10 +60,17 @@
   justify-content: center;
 }
 
+.logindivv{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .login{
   margin-top: 3rem;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 3rem;
 }
 
 @media only screen and (max-width: 900px) {
