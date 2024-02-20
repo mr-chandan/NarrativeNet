@@ -305,8 +305,10 @@ const Viewedit = () => {
               </div>
             </div>
           ) : (
-            <div className={styles.nontselect}>
-              Please select a contribution
+            <div className={styles.notselectcont}>
+              <div className={styles.nontselect}>
+                Please select a contribution
+              </div>
             </div>
           )}
         </div>

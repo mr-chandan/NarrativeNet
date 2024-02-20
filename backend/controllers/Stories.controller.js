@@ -122,7 +122,7 @@ class StoryController {
             const existingVote = await prisma.userContributionVote.findFirst({
                 where: {
                     contribution_story_id: selectedContribution.contributionid,
-                    user_id: selectedContribution.contributing_user_id
+                    user_id: user.sub
                 }
             });
 
@@ -134,7 +134,7 @@ class StoryController {
             await prisma.userContributionVote.create({
                 data: {
                     contribution_story_id: selectedContribution.contributionid,
-                    user_id: selectedContribution.contributing_user_id,
+                    user_id: user.sub,
                     vote_type: voteValue
                 }
             });
