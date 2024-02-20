@@ -29,11 +29,19 @@ const FormSchema = z.object({
     }),
 });
 
-export function Storytyper({ tone }: { tone: string | undefined }) {
+interface StorytyperProps {
+  tone: string | undefined;
+  refetch: () => void;
+}
+
+const Storytyper: React.FC<StorytyperProps> = ({ tone, refetch }) => {
   const { getAccessTokenSilently, user } = useAuth0();
   const { storyid } = useParams();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      bio: "",
+    }
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -64,6 +72,8 @@ export function Storytyper({ tone }: { tone: string | undefined }) {
           ),
         });
       }
+      form.reset()
+      refetch();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -98,4 +108,5 @@ export function Storytyper({ tone }: { tone: string | undefined }) {
       </form>
     </Form>
   );
-}
+};
+export default Storytyper;

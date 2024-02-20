@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Storytyper } from "./Storytyper";
+import Storytyper from "./Storytyper";
 import styles from "./viewedit.module.css";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
@@ -44,38 +44,37 @@ const Viewedit = () => {
   const [story, setStory] = useState<Contribution[]>([]);
   const [selectedContribution, setSelectedContribution] =
     useState<Contribution | null>(null);
-  useEffect(() => {
-    const fetchStory = async () => {
-      try {
-        fetch("/api/getstory/getuserstorybyid", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ storyid }),
+
+  const fetchStory = async () => {
+    try {
+      fetch("/api/getstory/getuserstorybyid", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ storyid }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Failed to fetch story: " + response.status);
+          }
         })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error("Failed to fetch story: " + response.status);
-            }
-          })
-          .then((data) => {
-            console.log(data);
-            setStorydata(data);
-            setStory(data.StoryContribution);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      } catch (error) {
-        console.error("Error fetching story:", error);
-      }
-    };
-
+        .then((data) => {
+          console.log(data);
+          setStorydata(data);
+          setStory(data.StoryContribution);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } catch (error) {
+      console.error("Error fetching story:", error);
+    }
+  };
+  useEffect(() => {
     fetchStory();
-
     return () => {};
   }, []);
 
@@ -98,6 +97,7 @@ const Viewedit = () => {
       });
       const resdata = await response.json();
       console.log(resdata);
+      handleContributionClick(selectedContribution);
     } else {
       console.log("select first");
     }
@@ -163,12 +163,22 @@ const Viewedit = () => {
       <div className={styles.grid}>
         <div className={styles.grid1}>
           <div className={styles.bordname}>
-            <div className={styles.sname}>{storydata?.title}</div>
+            <div className={styles.sname}>
+              {storydata?.title
+                ? storydata.title.charAt(0).toUpperCase() +
+                  storydata.title.slice(1)
+                : ""}
+            </div>
             <div className={styles.aname}>{storydata?.author_name}</div>
           </div>
           <Separator />
           <div className={styles.main}>
-            <span className={styles.pretext}>{storydata?.starting_line} </span>
+            <span className={styles.pretext}>
+              {storydata?.starting_line
+                ? storydata.starting_line.charAt(0).toUpperCase() +
+                  storydata.starting_line.slice(1)
+                : ""}{" "}
+            </span>
             {filteredContributions?.map((text, index) => (
               <span
                 className={`${styles.contribution} ${
@@ -212,11 +222,14 @@ const Viewedit = () => {
                 ) ? (
                   <div>You have already submitted a contribution</div>
                 ) : (
-                  <Storytyper tone={storydata?.type_of_tone} />
+                  <Storytyper
+                    tone={storydata?.type_of_tone}
+                    refetch={fetchStory}
+                  />
                 )}
               </>
             )}
-            {/* <Storytyper tone={storydata?.type_of_tone} /> */}
+            <Storytyper tone={storydata?.type_of_tone} refetch={fetchStory} />
           </div>
         </div>
         <div className={styles.grid2}>
@@ -270,6 +283,7 @@ const Viewedit = () => {
                   className={styles.vote}
                   onClick={() => {
                     vote(0);
+                    handleContributionClick(selectedContribution);
                   }}
                 >
                   <svg

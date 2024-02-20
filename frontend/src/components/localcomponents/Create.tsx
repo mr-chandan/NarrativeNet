@@ -178,7 +178,7 @@ const Create: React.FC = () => {
                 ))} */}
               </div>
             ) : (
-              <Button onClick={() => loginWithRedirect()}>Log In</Button>
+              <Button onClick={() => loginWithRedirect()} className={styles.login}>Log In</Button>
             )}
           </>
         )}
