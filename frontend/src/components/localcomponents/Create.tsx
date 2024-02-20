@@ -21,7 +21,7 @@ const Create: React.FC = () => {
     getAccessTokenSilently,
     isAuthenticated,
     isLoading,
-    logout,
+    // logout,
     user,
   } = useAuth0();
   const [trendingstory, settrendingstory] = useState<Story[]>([]);
@@ -128,16 +128,18 @@ const Create: React.FC = () => {
         <div className={styles.name}>Created Stories</div>
       </div>
 
-      <div className={styles.logindiv}>
-        {isLoading && <div>Loading...</div>}
+      {isLoading && <div>Loading...</div>}
 
-        {!isLoading && (
-          <>
-            {isAuthenticated ? (
-              <div className={styles.grid}>
-                {userstory.map((story, index) => (
+      {!isLoading && (
+        <div>
+          {isAuthenticated ? (
+            <div className={styles.grid}>
+              {userstory.length === 0 ? (
+                <div className={styles.logindiv}>Create your first story!</div>
+              ) : (
+                userstory.map((story, index) => (
                   <Link to={`/viewer/${story.id}`} key={index}>
-                    <div className={styles.card} key={index}>
+                    <div className={styles.card}>
                       <div className={styles.storyname}>
                         <div className={styles.cardname}>
                           {story.title.length > 15
@@ -158,39 +160,21 @@ const Create: React.FC = () => {
                       </div>
                     </div>
                   </Link>
-                ))}
-
-                {/* {userstory.map((story, index) => (
-                 
-                    <div className={styles.card}>
-                      <div className={styles.storyname}>
-                        <div className={styles.cardname}>{story.title}</div>
-                        <div>
-                          {formatDistanceToNow(new Date(story.published_date), {
-                            addSuffix: true,
-                          })}
-                        </div>
-                      </div>
-                      <div className={styles.author}>{story.author_name}</div>
-                      <div className={styles.bio}>{story.starting_line}</div>
-                    </div>
- 
-                ))} */}
-              </div>
-            ) : (
-              <Button onClick={() => loginWithRedirect()} className={styles.login}>Log In</Button>
-            )}
-          </>
-        )}
-      </div>
-
-      <button
-        onClick={() => {
-          logout();
-        }}
-      >
-        logout
-      </button>
+                ))
+              )}
+            </div>
+          ) : (
+            <div className={styles.logindiv}>
+              <Button
+                onClick={() => loginWithRedirect()}
+                className={styles.login}
+              >
+                Log In
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

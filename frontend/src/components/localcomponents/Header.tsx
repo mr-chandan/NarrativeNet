@@ -54,7 +54,9 @@ const formSchema = z.object({
 const Header = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { getAccessTokenSilently, user } = useAuth0();
-
+  const {
+    logout,
+  } = useAuth0();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -189,7 +191,7 @@ const Header = () => {
             </DialogContent>
           </Dialog>
 
-          <Avatar>
+          <Avatar  onClick={()=>{logout()}}>
             <AvatarImage
               src={
                 user?.picture
@@ -197,6 +199,7 @@ const Header = () => {
                   : "https://ui.shadcn.com/avatars/04.png"
               }
               alt="profile"
+
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>

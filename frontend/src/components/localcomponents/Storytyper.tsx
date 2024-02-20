@@ -63,14 +63,11 @@ const Storytyper: React.FC<StorytyperProps> = ({ tone, refetch }) => {
           body: JSON.stringify({ user, data, storyid }),
         });
         const message = await response.json();
+        console.log(message);
         toast({
-          title: "You submitted the following values:",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">{message.message}</code>
-            </pre>
-          ),
-        });
+          title: "Story sent",
+          description: "Your story has been successfully submitted.",
+        })
       }
       form.reset()
       refetch();

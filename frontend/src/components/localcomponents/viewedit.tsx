@@ -229,7 +229,7 @@ const Viewedit = () => {
                 )}
               </>
             )}
-            <Storytyper tone={storydata?.type_of_tone} refetch={fetchStory} />
+            {/* <Storytyper tone={storydata?.type_of_tone} refetch={fetchStory} /> */}
           </div>
         </div>
         <div className={styles.grid2}>
