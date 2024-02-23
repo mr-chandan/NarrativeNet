@@ -17,15 +17,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "../ui/use-toast";
+import { useState } from "react";
 
 const FormSchema = z.object({
   bio: z
     .string()
-    .min(10, {
-      message: "Bio must be at least 10 characters.",
+    .min(25, {
+      message: "contrubtion must be at least 25 characters.",
     })
-    .max(160, {
-      message: "Bio must not be longer than 30 characters.",
+    .max(500, {
+      message: "Bio must not be longer than 500 characters.",
     }),
 });
 
@@ -36,17 +37,20 @@ interface StorytyperProps {
 
 const Storytyper: React.FC<StorytyperProps> = ({ tone, refetch }) => {
   const { getAccessTokenSilently, user } = useAuth0();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { storyid } = useParams();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       bio: "",
-    }
+    },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      if (user) {
+      if (!isSubmitting && user) {
+        // Check submission status
+        setIsSubmitting(true); // Set submitting to true
         const token = await getAccessTokenSilently({
           authorizationParams: {
             audience: "apple",
@@ -67,9 +71,10 @@ const Storytyper: React.FC<StorytyperProps> = ({ tone, refetch }) => {
         toast({
           title: "Story sent",
           description: "Your story has been successfully submitted.",
-        })
+        });
+        setIsSubmitting(false); // Reset submitting status
       }
-      form.reset()
+      form.reset();
       refetch();
     } catch (error) {
       console.error("Error fetching data:", error);
