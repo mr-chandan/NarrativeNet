@@ -23,6 +23,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import {
+  CreditCard,
+  LifeBuoy,
+  LogOut,
+  Settings,
+  User as Usericon,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const formSchema = z.object({
   title: z
@@ -54,9 +70,7 @@ const formSchema = z.object({
 const Header = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { getAccessTokenSilently, user } = useAuth0();
-  const {
-    logout,
-  } = useAuth0();
+  const { logout } = useAuth0();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -191,17 +205,55 @@ const Header = () => {
             </DialogContent>
           </Dialog>
 
-          <Avatar  onClick={()=>{logout()}}>
-            <AvatarImage
-              src={
-                user?.picture
-                  ? user.picture
-                  : "https://ui.shadcn.com/avatars/04.png"
-              }
-              alt="profile"
-            />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="cursor-pointer">
+                <Avatar>
+                  <AvatarImage
+                    src={
+                      user?.picture
+                        ? user.picture
+                        : "https://ui.shadcn.com/avatars/04.png"
+                    }
+                    alt="profile"
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem disabled>
+                  <Usericon className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem disabled>
+                  <LifeBuoy className="mr-2 h-4 w-4" />
+                  <span>Support</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuItem disabled>
+                <CreditCard className="mr-2 h-4 w-4" />
+                <span>Billing</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer"
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
     </div>

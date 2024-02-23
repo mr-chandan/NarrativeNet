@@ -1,12 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 .container {
   max-width: 1450px;
   margin-left: auto;
   margin-right: auto;
   padding: 0 0.9rem;
+  font-family: "Inter", sans-serif;
 }
 
 .create {
-  margin: 1.5rem 0 1.5rem 1.5rem;
+  margin: 1.5rem 0 1.5rem 0rem;
 }
 
 .name {
@@ -32,7 +35,7 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .sname {
@@ -55,7 +58,6 @@
   background: #ffff;
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
 }
 
 .main {
@@ -69,8 +71,6 @@
   word-break: break-all;
 }
 
-.nontselect {
-}
 
 .switch {
   padding: 1rem;
@@ -91,6 +91,7 @@
 
 .ctext {
   padding: 1rem;
+  font-family: "Inter";
 }
 
 .votediv {
@@ -117,7 +118,7 @@
   padding-bottom: 5rem;
 }
 
-@media only screen and (max-width: 1050px) {
+@media only screen and (max-width: 1150px) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -132,11 +133,13 @@
 
 .pretext {
   padding: 1px;
+  font-family: "Inter", sans-serif;
 }
 .contribution {
   word-wrap: break-word;
   overflow-wrap: break-word;
   cursor: pointer;
+  font-family: "Inter", sans-serif;
 }
 
 .switchcont {
@@ -148,6 +151,14 @@
   align-items: center;
   justify-content: center;
 }
+
+
+.notselectcont{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 @media only screen and (max-width: 600px) {
   .name {

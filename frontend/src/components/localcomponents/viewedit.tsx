@@ -144,7 +144,7 @@ const Viewedit = () => {
 
   const shuffledColors: string[] = shuffleArray(colors);
 
-  const [showColors, setShowColors] = useState(true);
+  const [showColors, setShowColors] = useState(false);
   const [hideDownvoted, setHideDownvoted] = useState(false);
   // Function to toggle the display of colors
   const toggleColors = () => {

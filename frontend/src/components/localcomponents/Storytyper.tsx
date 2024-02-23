@@ -89,7 +89,7 @@ const Storytyper: React.FC<StorytyperProps> = ({ tone, refetch }) => {
               </FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Create your magic"
+                  placeholder="Write the next part of the story..."
                   className="resize-none"
                   {...field}
                 />
